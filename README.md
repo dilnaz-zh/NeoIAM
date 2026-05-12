@@ -17,5 +17,8 @@ The script requires read-only access to your AWS IAM infrastructure.
   ```aws configure```<br />
 
 Provide your _**AWS Access Key ID**_, _**Secret Access Key**_ and default region.
+### 2. Installation
+Clone the repository and install the required Python dependencies:<br />
+```git clone https://github.com/dilnaz-zh/NeoIAM.git```
 
 
