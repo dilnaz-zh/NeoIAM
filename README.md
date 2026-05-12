@@ -34,13 +34,24 @@ where a.name in ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction
 with u, collect(DISTINCT a.name) as user_permisssions
 where size(user_permisssions) = 3 return u.name as potentional_vulnerabale_user
 ```
-#### 2. Privilege Escalation via Group
+#### 2. Search for escalation chain via Role Chaining.
+A user can have these three rights not by himself, but through a role into which he can “change clothes”. 
+
+The request still ensures that a user is considered vulnerable only if they (either themselves or through a role) collect the entire set of three actions.
+```
+match (u:User)-[:CAN_ASSUME_POLICY*0..1]->(principal)
+where (principal:User OR principal:Role)
+match (principal)-[:HAS_POLICY|MEMBER_OF*1..2]->(:Policy)-[:ALLOW]->(a:Action)
+where a.name in ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction']
+with u, collect(DISTINCT a.name) as user_permissions
+where size(user_permissions) = 3
+returm u.name as potential_vulnerable_user, user_permissions
+```
+#### 3. Privilege Escalation via Group
 Often, users receive excessive rights not directly, but because they were added to a "harmless" group that has rights to modify other groups.
 ```
 match (u:User)-[:MEMBER_OF]->(g:Group)-[:HAS_POLICY]->(:Policy)-[:ALLOW]->(a:Action) where a.name in ['iam:AddUserToGroup', 'iam:UpdateGroup'] return u.name, g.name, a.name
 ```
-
-
 
   
 
