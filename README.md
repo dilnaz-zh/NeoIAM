@@ -93,3 +93,11 @@ match(u:User)-[:MEMBER_OF]->(g)-[:HAS_POLICY]->(p)-[:ALLOW]->(a:Action)
 where not (u)-[:MEMBER_OF]->(g)-[:HAS_POLICY]->()-[:DENY]->(a)
 return a.name as effective_action
 ```
+#### 8. Overly Permissive Policies
+The request searches for actions that grant access to all methods of a specific service or to everything in the account (*). These are critical access points, as they are most often exploited for hacking.
+```
+match (p:Policy)-[:ALLOW]->(a:Action)
+where a.name ENDS WITH ':*' OR a.name = '*'
+return p.name AS DangerousPolicy, count(a) as WildcardCount
+order by WildcardCount desc
+```
