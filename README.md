@@ -14,7 +14,7 @@ The script requires read-only access to your AWS IAM infrastructure.
   
 + [AWS](https://aws.amazon.com/cli/): Sigh in to console and configure your credentials.<br />
 
-  ```aws configure```<br />
+  ##### ```aws configure```<br />
 
 Provide your _`AWS Access Key ID`_, _`Secret Access Key`_ and default region.
 
