@@ -16,6 +16,6 @@ The script requires read-only access to your AWS IAM infrastructure.
 
   ```aws configure```<br />
 
-Provide your _`AWS Access Key ID`_, _`Secret Access Key`_ and default region.
+Provide your _**AWS Access Key ID**_, _**Secret Access Key**_ and default region.
 
 
