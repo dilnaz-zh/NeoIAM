@@ -19,6 +19,15 @@ The script requires read-only access to your AWS IAM infrastructure.
 Provide your _**AWS Access Key ID**_, _**Secret Access Key**_ and default region.
 ### 2. Installation
 Clone the repository and install the required Python dependencies:<br />
+
 ```git clone https://github.com/dilnaz-zh/NeoIAM.git```
+### 3. Environment Configuration
+Go to `.env` file, provide your Neo4j connection details and _**AWS Access Key ID**_, _**Secret Access Key**_:
+```AWS_ACCESS_KEY_ID= your_access_id
+   AWS_SECRET_ACCESS_KEY= your_secret_key
+   NEO4J_URI= your_neo4j_uri
+   NEO4J_USER= your_neo4j_username
+   NEO4J_PASSWORD= your_neo4j_passwd```
+
 
 
