@@ -63,12 +63,33 @@ where size(user_permissions) = 3
 return u.name as vulnerable_student, user_permissions
 ```
 #### 5. Detection of unauthorized third-party access 
-In AWS, each role has an "Assume Role Policy Document." This is a list of who is allowed to log into that role. If it contains an account ID that isn't on your "whitelist," it's a critical vulnerability.
+In AWS, each role has an "Assume Role Policy Document." This is a list of who is allowed to log into that role. If it contains an account ID that isn't on your "whitelist," it's a critical vulnerability. The algorithm scans the AssumeRolePolicyDocument (Trust Policy) of all roles and matches the trusted party IDs against the corporate whitelist.
 > [!NOTE]  
-> In the `main.py` add your account ID
+> In the `main.py` add your AWS account ID, it is written as:
 > ```
-> MY_ACCOUNT_ID = "123456789012"
+> MY_ACCOUNT_ID = your_account_id 
 > ```
+```
+match (e:ExternalAccount)-[rel:DANGEROUS_TRUST]->(r:Role) return e.id AS attacker_account, r.name AS vulnerable_role
+```
+#### 6. Old Access Keys
+Search for active Access Keys that have not been used for more than 90 days (or are simply very old).
 
+I used the list_access_keys method for each user. AWS returns the key creation date (CreateDate). Then I compare it with the current date and calculate the key's age in days.
+```
+match (u:User) where u.key_age_days > 90 return u.name AS User, u.key_age_days AS DaysOld order by u.key_age_days DESC
+```
 
-
+Another case - the access keys are old + _have an administarion access_ 
+```
+match (u:User)-[:HAS_POLICY|MEMBER_OF*1..2]->(:Policy)-[:ALLOW]->(a:Action)
+where u.key_age_days > 90 AND a.name = '*' return u.name, u.key_age_days
+```
+#### 7. Effective Action Analysis
+It demonstrates the "Deny Overrides Allow" principle of AWS IAM.
+It first finds all actions that are explicitly ALLOWED for the user through her group memberships and policies. Then, it uses a WHERE NOT clause to filter out any of those actions that are also explicitly DENIED.
+```
+match(u:User)-[:MEMBER_OF]->(g)-[:HAS_POLICY]->(p)-[:ALLOW]->(a:Action)
+where not (u)-[:MEMBER_OF]->(g)-[:HAS_POLICY]->()-[:DENY]->(a)
+return a.name as effective_action
+```
