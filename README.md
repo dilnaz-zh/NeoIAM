@@ -1,7 +1,7 @@
 # NeoIAM
 A tool for analyzing and visualizing AWS IAM configurations using the Neo4j graph database. The project allows you to identify hidden administrative privileges (Shadow Admins), analyze trust chains between accounts, and detect critical security policy errors, such as missing explicit denies for dangerous actions.
 ## Getting Started 
-**1. Prerequisites**<br />
+#### 1. Prerequisites
 Before running the tool, ensure you have the following accounts and software ready:<br />
 **Neo4j Database**<br />
 You can use either the desktop version or the cloud-based sandbox:<br />
