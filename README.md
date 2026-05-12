@@ -27,15 +27,20 @@ Go to `.env` file, provide your Neo4j connection details and _**AWS Access Key I
 In this section, I provide Cypher queries to detect common AWS misconfigurations and potential attack paths.
 #### 1. Shadow Admin Detection (Privilege Escalation)
 Find users who are not in the "Admin" group but have a combination of permissions that allow them to take over the account.
-+ Looks for Lambda exploitation: `iam:PassRole` + `lambda:CreateFunction` + `lambda:InvokeFunction`<br />
-
++ Looks for Lambda exploitation: `iam:PassRole` + `lambda:CreateFunction` + `lambda:InvokeFunction`.
 ```
 match (u:User)-[ :HAS_POLICY|MEMBER_OF*1..2]->(:Policy)-[ :ALLOW]->( a:Action) 
 where a.name in ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction']
 with u, collect(DISTINCT a.name) as user_permisssions
-where size(user_permisssions) = 3 return u.name as potentional_vulnerabale_user```
-
+where size(user_permisssions) = 3 return u.name as potentional_vulnerabale_user
+```
 #### 2. Privilege Escalation via Group
+Often, users receive excessive rights not directly, but because they were added to a "harmless" group that has rights to modify other groups.
+```
+match (u:User)-[:MEMBER_OF]->(g:Group)-[:HAS_POLICY]->(:Policy)-[:ALLOW]->(a:Action) where a.name in ['iam:AddUserToGroup', 'iam:UpdateGroup'] return u.name, g.name, a.name
+```
+
+
 
   
 
