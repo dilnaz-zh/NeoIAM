@@ -52,7 +52,16 @@ Often, users receive excessive rights not directly, but because they were added 
 ```
 match (u:User)-[:MEMBER_OF]->(g:Group)-[:HAS_POLICY]->(:Policy)-[:ALLOW]->(a:Action) where a.name in ['iam:AddUserToGroup', 'iam:UpdateGroup'] return u.name, g.name, a.name
 ```
-
+#### 4. Explosive Privilege Escalation
+Demonstration of how the unintentional deletion of a single deny rule in Group Policy leads to a mass compromise (10+ accounts) by activating a latent attack vector via iam:PassRole and AWS Lambda.
++ The logic: Create a group and add users. Add permissions such: ALLOW - lambda (both of them) and DENY - iam:passrole. Run this query and it shows that nobody has the exsessive permissions. However, a member of this group need to run iam:PassRole, so they request to remove the DENY for iam:PassRole in the policy. Now, run the query again and you could see the privelege escalation scenario.
+```
+match (u:User)-[:MEMBER_OF]->(g:Group)-[:HAS_POLICY]->(pol:Policy)-[rel:ALLOW]->(a:Action)
+where a.name IN ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction']
+with u, collect(DISTINCT a.name) as user_permissions
+where size(user_permissions) = 3
+return u.name as vulnerable_student, user_permissions
+```
   
 
 
