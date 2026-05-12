@@ -29,10 +29,12 @@ In this section, I provide Cypher queries to detect common AWS misconfigurations
 Find users who are not in the "Admin" group but have a combination of permissions that allow them to take over the account.
 + Looks for Lambda exploitation: `iam:PassRole` + `lambda:CreateFunction` + `lambda:InvokeFunction`<br />
 
-``` match (u:User)-[ :HAS_POLICY|MEMBER_OF*1..2]->(:Policy)-[ :ALLOW]->( a:Action) 
-    where a.name in ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction']
-    with u, collect(DISTINCT a.name) as user_permisssions
-    where size(user_permisssions) = 3 return u.name as potentional_vulnerabale_user ```
+```
+match (u:User)-[ :HAS_POLICY|MEMBER_OF*1..2]->(:Policy)-[ :ALLOW]->( a:Action) 
+where a.name in ['iam:PassRole', 'lambda:CreateFunction', 'lambda:InvokeFunction']
+with u, collect(DISTINCT a.name) as user_permisssions
+where size(user_permisssions) = 3 return u.name as potentional_vulnerabale_user ```
+
   
 
 
