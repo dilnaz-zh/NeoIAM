@@ -8,4 +8,6 @@ You can use either the desktop version or the cloud-based sandbox:<br />
 + [Neo4j Desktop](https://neo4j.com/download/) - best for local development and deep graph exploration. Download, install, and create a new project with a local database.
 + [Neo4j Aura DB](https://neo4j.com/product/auradb/) - fully managed cloud instance. Use the free tier to host your graph in the cloid without installation.
 #### AWS Access
-The script requires read-only access to your AWS IAM infrastructure.<br />
+The script requires read-only access to your AWS IAM infrastructure.
++ IAM Permissions: Ensure your IAM user has `IAMReadOnlyAccess` and `SecurityAudit` policies attached.
+
