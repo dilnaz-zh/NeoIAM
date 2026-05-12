@@ -25,7 +25,7 @@ Clone the repository and install the required Python dependencies:<br />
 Go to `.env` file, provide your Neo4j connection details and _**AWS Access Key ID**_, _**Secret Access Key**_:
 ### 4. Investigation & Threat Hunting Scenarios
 In this section, I provide Cypher queries to detect common AWS misconfigurations and potential attack paths.
-### 1. Shadow Admin Detection (Privilege Escalation)</summary>
+#### 1. Shadow Admin Detection (Privilege Escalation)</summary>
 Find users who are not in the "Admin" group but have a combination of permissions that allow them to take over the account.
 + Looks for Lambda exploitation: `iam:PassRole` + `lambda:CreateFunction` + `lambda:InvokeFunction`<br />
 
