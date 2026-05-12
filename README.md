@@ -11,6 +11,8 @@ You can use either the desktop version or the cloud-based sandbox:<br />
 The script requires read-only access to your AWS IAM infrastructure.
 + IAM Permissions: Ensure your IAM user has `IAMReadOnlyAccess` and `SecurityAudit` policies attached.
 + [AWS](https://aws.amazon.com/cli/): Sigh in to console and configure your credentials.<br />
+
 ```aws configure```<br />
+
 Provide your _AWS Access Key ID_, _Secret Access Key_ and default region.
 
